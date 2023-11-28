@@ -1,0 +1,379 @@
+---
+title: 'Activity 10: The Collatz Conjecture and Diamonds Dataset'
+author: "Michael Ulis"
+date: "2023-11-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(tidyverse)
+library(janitor)
+library(knitr)
+library(kableExtra)
+```
+
+## SECTION 1 - The Collatz Conjecture
+
+## The Collatz Conjecture: Introduction
+
+The Collatz Conjecture, also known as the 3n+1 conjecture or the hailstone sequence, is an intriguing mathematical problem that has piqued the interest of mathematicians for decades. The iterative application of a simple mathematical function to positive integers is central to the conjecture.
+
+## The Collatz Conjecture: Function
+
+The Collatz function, denoted as C(n), is defined as follows:
+
+1.  If n is even, C(n) = n / 2.
+2.  If n is odd, C(n) = 3n + 1.
+3.  If n is 1, stop.
+
+This function generates a sequence of integers, starting from a positive integer n, by repeatedly applying these rules. The conjecture proposes that, regardless of the initial positive integer, this sequence will eventually reach the number 1.
+
+## The Collatz Conjecture: Stopping Times
+
+One of the intriguing aspects of the Collatz Conjecture is the concept of "stopping times." A stopping time is defined as the number of times we need to recursively invoke the Collatz function to reach the number 1. For example:
+
+-   The stopping time for 1 is 0, as no iterations are needed to reach 1.
+-   The stopping time for 2 is 1, as it takes one iteration: 2 -\> 1.
+-   The stopping time for 3 is 7, as it takes seven iterations: 3 -\> 10 -\> 5 -\> 16 -\> 8 -\> 4 -\> 2 -\> 1.
+
+## The Collatz Conjecture: Investigation
+
+In this analysis, Dr. Hatfield is curious about the distribution of stopping times for the first 10,000 positive integers. Are there any patterns or anomalies in the stopping times, or do they vary widely? I plan to use R to explore and visualize this distribution to gain insights into the behavior of the Collatz Conjecture.
+
+I will generate stopping times for the first 10,000 positive integers and create visualizations to help better understand this intriguing mathematical phenomenon.
+
+## The Collatz Conjecture: Code
+
+First I need to write a function that calculates the stopping time
+
+```{r stopping_time_function}
+get_stop_time <- function(num, stop_time = 0) {
+  if (num == 1) {
+    return(stop_time)
+  } else if (num %% 2 != 0) {
+    get_stop_time(num = 3 * num + 1, stop_time = stop_time + 1)
+  } else {
+    get_stop_time(num = num / 2, stop_time = stop_time + 1)
+  }
+}
+```
+
+Next, I need to make this function vectorized so I can create the histogram.
+
+```{r stopping_time_vectorized}
+vectorized_get_stop_time <- Vectorize(
+  FUN = get_stop_time, 
+  vectorize.args = 'num'
+)
+```
+
+Finally, I need to create a histogram of the stopping times for the first 10,000 positive integers.
+
+```{r stopping_time_histogram}
+ggplot(
+    as.data.frame(vectorized_get_stop_time(num = 1:10000))
+  ) +
+  aes(x = vectorized_get_stop_time(num = 1:10000)) +
+  geom_histogram(bins = 30L, fill = "#112446") +
+  theme_minimal() +
+  labs(
+    title = "Stopping Time Histogram",
+    x = "Stopping Time",
+    y = "Frequency"
+  )
+```
+
+## The Collatz Conjecture: Analysis
+
+We gain valuable insights into the distribution of stopping times for the first 10,000 positive integers in the context of the Collatz Conjecture by visualizing and analyzing the histogram of stopping times. The histogram has a bimodal distribution which means that there is a presence of two peaks. This implies that the Collatz Conjecture sequence's behavior is not uniform, and there are distinct patterns in the stopping times of different numbers. Some numbers reach 1 quickly, whereas others require many iterations, resulting in the observed bimodal distribution.
+
+## SECTION 2 - Diamonds
+
+## Diamonds: Introduction
+
+Diamonds are famous for their beauty, rarity, and the substantial investment they represent. The price of a diamond can vary greatly depending on a number of factors, and understanding what factors contribute to these price differences is an intriguing area of study. In this analysis, we will look at the "diamonds" data set to learn about the factors that can affect the price of a diamond.
+
+## Diamonds: The "diamonds" Data Set
+
+In the field of data science, the "diamonds" data set is well-known and widely used. It includes information about thousands of diamonds, including carat weight, cut, color, clarity, depth, table, and price. These attributes describe each diamond in the data set, and we will use this data to uncover patterns and relationships.
+
+## Diamonds: Investigation
+
+The main question is: What factors influence a diamond's price? We hope to learn how the attributes of a diamond interact and affect its price by analyzing this data set.
+
+## Diamonds: Data Visualization
+
+First, I have visualizations that explore how different values influence the price of diamonds. The factors that I explored were: carat, depth, table, and volume. The colors are the different colors of the diamonds and the shapes are the different cut qualities. The different graphs are all the different diamond clarity categories. There were 53,940 diamonds in this study.
+
+```{r diamonds_data_visualizations}
+# First, I need to import the "diamonds" data set
+
+data("diamonds")
+```
+
+## Carat Influence on Price Visualization by Color
+
+```{r diamonds_data_visualizations_carat_price_color}
+# The following code chunk creates the carat vs. price visualization by color
+
+ggplot(diamonds) +
+aes(
+x = carat,
+y = price,
+color = color
+) +
+geom_point(size = 2) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Carat Influence on Price by Color")
+```
+
+## Carat Influence on Price Visualization by Cut
+
+```{r diamonds_data_visualizations_carat_price_cut}
+# The following code chunk creates the carat vs. price visualization by cut
+
+ggplot(diamonds) +
+aes(
+x = carat,
+y = price,
+color = cut
+) +
+geom_point(size = 2) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Carat Influence on Price by Cut")
+```
+
+## Depth Influence on Price Visualization by Color
+
+```{r diamonds_data_visualizations_depth_price_color}
+# The following code chunk creates the depth vs. price visualization by color
+
+ggplot(diamonds) +
+aes(
+x = depth,
+y = price,
+color = color
+) +
+geom_point(size = 2) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Depth Influence on Price by Color")
+```
+
+## Depth Influence on Price Visualization by Cut
+
+```{r diamonds_data_visualizations_depth_price_cut}
+# The following code chunk creates the depth vs. price visualization by cut
+
+ggplot(diamonds) +
+aes(
+x = depth,
+y = price,
+color = cut
+) +
+geom_point(size = 2) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Depth Influence on Price by Cut")
+```
+
+## Table Influence on Price Visualization by Color
+
+```{r diamonds_data_visualizations_table_price_color}
+# The following code chunk creates the table vs. price visualization by color
+
+ggplot(diamonds) +
+aes(
+x = table,
+y = price,
+color = color
+) +
+geom_point(size = 1.5) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Table Influence on Price by Color")
+```
+
+## Table Influence on Price Visualization by Cut
+
+```{r diamonds_data_visualizations_table_price_cut}
+# The following code chunk creates the table vs. price visualization by cut
+
+ggplot(diamonds) +
+aes(
+x = table,
+y = price,
+color = cut
+) +
+geom_point(size = 1.5) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Table Influence on Price by Cut")
+```
+
+## Volume Influence on Price Visualuzation by Color
+
+```{r diamonds_data_visualizations_volume_price_color}
+# The following code chunk creates the volume vs. price visualization by color
+
+ggplot(diamonds) +
+aes(
+x = x * y * z,
+y = price,
+color = color
+) +
+geom_point(size = 1.5, na.rm = TRUE) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Volume Influence on Price by Color", x = "Volume")+
+xlim(-1, 1000)
+```
+
+## Volume Influence on Price Visualuzation by Cut
+
+```{r diamonds_data_visualizations_volume_price_cut}
+# The following code chunk creates the volume vs. price visualization by cut
+
+ggplot(diamonds) +
+aes(
+x = x * y * z,
+y = price,
+color = cut
+) +
+geom_point(size = 1.5, na.rm = TRUE) +
+scale_color_hue(direction = 1) +
+theme_minimal() +
+facet_wrap(vars(clarity)) +
+labs(title = "Volume Influence on Price by Cut", x = "Volume")+
+xlim(-1, 1000)
+```
+
+## Diamonds: Summary Table
+
+## Summary Statistics For Price by Cut
+
+```{r diamonds_summary_table_cut}
+# Build Summary table
+
+final_table <- diamonds %>%
+  group_by(cut) %>%
+  summarize(
+    count = n(),
+    min = min(price, na.rm = TRUE),
+    q1 = quantile(price, probs = 0.2, na.rm = TRUE),
+    q2 = quantile(price, probs = 0.4, na.rm = TRUE),
+    median = median(price, na.rm = TRUE),
+    q3 = quantile(price, probs = 0.6, na.rm = TRUE),
+    q4 = quantile(price, probs = 0.8, na.rm = TRUE),
+    max = max(price, na.rm = TRUE),
+    average = mean(price, na.rm = TRUE),
+    standard_dev = sd(price, na.rm = TRUE)
+  )
+
+# Create the polished table
+
+final_table %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Statistics for Diamond Cut by Price",
+    col.names = c("Cut", "Count", "Minimum", "Q1", "Q2", "Median",
+                  "Q3", "Q4", "Maximum", "Standard Arithmetic Mean", 
+                  "Standard Arithmetic Standard deviation"),
+    align = c("l", rep("c", 10)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic()
+```
+
+## Summary Statistics For Price by Color
+
+```{r diamonds_summary_table_color}
+# Build Summary table
+
+final_table <- diamonds %>%
+  group_by(color) %>%
+  summarize(
+    count = n(),
+    min = min(price, na.rm = TRUE),
+    q1 = quantile(price, probs = 0.2, na.rm = TRUE),
+    q2 = quantile(price, probs = 0.4, na.rm = TRUE),
+    median = median(price, na.rm = TRUE),
+    q3 = quantile(price, probs = 0.6, na.rm = TRUE),
+    q4 = quantile(price, probs = 0.8, na.rm = TRUE),
+    max = max(price, na.rm = TRUE),
+    average = mean(price, na.rm = TRUE),
+    standard_dev = sd(price, na.rm = TRUE)
+  )
+
+# Create the polished table
+
+final_table %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Statistics for Diamond Color by Price",
+    col.names = c("Color", "Count", "Minimum", "Q1", "Q2", "Median",
+                  "Q3", "Q4", "Maximum", "Standard Arithmetic Mean", 
+                  "Standard Arithmetic Standard deviation"),
+    align = c("l", rep("c", 10)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic()
+```
+
+## Summary Statistics For Price by Clarity
+
+```{r diamonds_summary_table_clarity}
+# Build Summary table
+
+final_table <- diamonds %>%
+  group_by(clarity) %>%
+  summarize(
+    count = n(),
+    min = min(price, na.rm = TRUE),
+    q1 = quantile(price, probs = 0.2, na.rm = TRUE),
+    q2 = quantile(price, probs = 0.4, na.rm = TRUE),
+    median = median(price, na.rm = TRUE),
+    q3 = quantile(price, probs = 0.6, na.rm = TRUE),
+    q4 = quantile(price, probs = 0.8, na.rm = TRUE),
+    max = max(price, na.rm = TRUE),
+    average = mean(price, na.rm = TRUE),
+    standard_dev = sd(price, na.rm = TRUE)
+  )
+
+# Create the polished table
+
+final_table %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Statistics for Diamond Clarity by Price",
+    col.names = c("Clarity", "Count", "Minimum", "Q1", "Q2", "Median",
+                  "Q3", "Q4", "Maximum", "Standard Arithmetic Mean", 
+                  "Standard Arithmetic Standard deviation"),
+    align = c("l", rep("c", 10)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic()
+```
+
+## Diamonds: Analysis
+
+Exploring the "diamonds" data set in R with data visualizations and summary tables provides useful insights into the factors that influence diamond prices. We see a strong positive correlation between carat weight and price in the scatter plots, which corresponds to common knowledge that carat weight is a key determinant of a diamond's price. This emphasizes the significance of carat weight in pricing. However, there is a wide spread of data points in the scatter plots of depth vs. price, indicating that depth alone is not a strong predictor of price. Similarly, there is no clear linear relationship between table percentage and price in the scatter plots, indicating that the diamond's table percentage may have a limited direct impact on its price. The scatter plots of volume (product of x, y, and z) vs. price, on the other hand, shows a positive correlation, emphasizing the role of the diamond's overall volume in pricing, in addition to carat weight. These findings are supported by summary tables for carat by price, color by price, and clarity by price. They demonstrate that higher carat weight, better color grades, and improved clarity grades are related to higher average prices, highlighting the importance of these factors in diamond pricing. In conclusion, the data visualizations and summary tables provide a comprehensive understanding of what factors influence diamond pricing.
+
+## Reflections on the Course
+
+This introductory R course provided me with a comprehensive overview of essential data analysis and visualization techniques. I was able to explore the use of functions in R, which are fundamental for efficient data manipulation and analysis. The concept of "tidy data" highlighted the importance of structuring data in a clean, consistent format for better understanding and analysis. Building various data visualizations, from scatter plots to histograms, was a highlight, demonstrating the power of visual representations in conveying complex information. Data wrangling techniques, particularly with the dplyr package, simplified data cleaning and transformation. Creating informative tables and integrating R Markdown files for dynamic reporting were other valuable skills learned in my opinion. Overall, I believe that the course has equipped me with a solid foundation in R for data analysis and has opened the doors to further exploration and real-world data projects.
