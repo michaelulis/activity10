@@ -5,14 +5,11 @@ date: "2023-11-28"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-library(ggplot2)
-library(tidyverse)
-library(janitor)
-library(knitr)
-library(kableExtra)
+```{r loadPackages}
+#Load packages with groundhog to improve stability
+library("groundhog")
+pkgs <- c("ggplot2", "tidyverse", "janitor", "knitr", "kableExtra")
+groundhog.library(pkgs, '2023-11-28') #Use the date that you started the project here
 ```
 
 ## SECTION 1 - The Collatz Conjecture
