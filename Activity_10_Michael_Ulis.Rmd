@@ -9,7 +9,7 @@ output: html_document
 #Load packages with groundhog to improve stability
 library("groundhog")
 pkgs <- c("ggplot2", "tidyverse", "janitor", "knitr", "kableExtra")
-groundhog.library(pkgs, '2023-11-28') #Use the date that you started the project here
+groundhog.library(pkgs, '2023-11-08') #Use the date that you started the project here
 ```
 
 ## SECTION 1 - The Collatz Conjecture
