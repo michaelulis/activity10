@@ -5,6 +5,10 @@ date: "2023-11-28"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
 ```{r loadPackages}
 #Load packages with groundhog to improve stability
 library("groundhog")
@@ -374,3 +378,13 @@ Exploring the "diamonds" data set in R with data visualizations and summary tabl
 ## Reflections on the Course
 
 This introductory R course provided me with a comprehensive overview of essential data analysis and visualization techniques. I was able to explore the use of functions in R, which are fundamental for efficient data manipulation and analysis. The concept of "tidy data" highlighted the importance of structuring data in a clean, consistent format for better understanding and analysis. Building various data visualizations, from scatter plots to histograms, was a highlight, demonstrating the power of visual representations in conveying complex information. Data wrangling techniques, particularly with the dplyr package, simplified data cleaning and transformation. Creating informative tables and integrating R Markdown files for dynamic reporting were other valuable skills learned in my opinion. Overall, I believe that the course has equipped me with a solid foundation in R for data analysis and has opened the doors to further exploration and real-world data projects.
+
+\newpage
+
+# Code Appendix
+
+```{r codeAppedix}
+#| ref.label = knitr::all_labels(),
+#| echo = TRUE,
+#| eval = FALSE
+```
